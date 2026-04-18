@@ -2,92 +2,71 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Cho anh một cơ hội nha 🥺</title>
+<title>Cho anh cơ hội nhé</title>
 
 <style>
 
 body{
-    background: linear-gradient(135deg,#ffd6e7,#ffe9f3);
-    font-family: "Comic Sans MS", cursive;
-    text-align:center;
-    padding-top:120px;
-    overflow:hidden;
+background:#ffe6f0;
+font-family:Arial;
+text-align:center;
+padding-top:120px;
 }
 
 h1{
-    color:#ff4d88;
-    font-size:32px;
-}
-
-p{
-    color:#ff6fa5;
-    font-size:18px;
+color:#ff4d88;
 }
 
 button{
-    padding:12px 25px;
-    font-size:18px;
-    border:none;
-    border-radius:15px;
-    cursor:pointer;
-    margin:10px;
+font-size:18px;
+padding:12px 25px;
+margin:10px;
+border:none;
+border-radius:12px;
+cursor:pointer;
 }
 
-#yes{
-    background:#ff6fa5;
-    color:white;
+#yesBtn{
+background:#ff4d88;
+color:white;
 }
 
-#no{
-    background:#ffc0cb;
-    position:absolute;
+#noBtn{
+background:#cccccc;
 }
 
-/* sticker */
-
-.sticker{
-    position:absolute;
-    font-size:30px;
-    animation: float 5s infinite ease-in-out;
+.heart{
+position:fixed;
+font-size:20px;
+animation:fall 3s linear infinite;
 }
 
-@keyframes float{
-    0%{transform:translateY(0);}
-    50%{transform:translateY(-20px);}
-    100%{transform:translateY(0);}
+@keyframes fall{
+0%{top:-10%;}
+100%{top:110%;}
 }
 
 </style>
-
 </head>
 
 <body>
 
-<h1>🥺 Em đồng ý cho anh cơ hội nhé?</h1>
+<h1>Em đồng ý cho anh một cơ hội nhé ❤️</h1>
 
-<button id="yes" onclick="yes()">Đồng ý 💖</button>
-<button id="no" onmouseover="move()">Không 😶</button>
+<button id="yesBtn" onclick="accept()">Đồng ý</button>
+<button id="noBtn" onclick="changeNo()">Không</button>
 
-<p>Thoát app hoặc không chọn = Đồng ýyy 😌</p>
-
-<!-- sticker -->
-<div class="sticker" style="top:10%;left:10%">❤️</div>
-<div class="sticker" style="top:20%;right:15%">🐻</div>
-<div class="sticker" style="bottom:15%;left:20%">✨</div>
-<div class="sticker" style="bottom:10%;right:10%">💞</div>
+<audio id="music" src="music.mp3"></audio>
 
 <script>
-
-function yes(){
-    <script>
 
 let texts = [
 "Không",
 "Anh thử lại đi 😝",
-"Thật luôn hả",
+"Em chắc chưa",
 "Bấm lại xem",
-"Em suy nghĩ kỹ chưa",
-"Thôi đồng ý đi mà 😭"
+"Đừng bấm nữa 😭",
+"Thôi đồng ý đi ❤️"
 ];
 
 let i = 0;
@@ -96,14 +75,14 @@ let size = 18;
 function changeNo(){
 
 i++;
-size += 8;
+size += 10;
 
 let noBtn = document.getElementById("noBtn");
 
 if(i < texts.length){
 noBtn.innerText = texts[i];
 }else{
-noBtn.innerText = "Đồng ý đi nha ❤️";
+noBtn.innerText = "Đồng ý đi mà ❤️";
 }
 
 noBtn.style.fontSize = size + "px";
@@ -111,15 +90,27 @@ noBtn.style.padding = (size/2) + "px " + size + "px";
 
 }
 
-</script>
+function accept(){
 
+document.getElementById("music").play();
 
-function move(){
-    var x = Math.random() * window.innerWidth;
-    var y = Math.random() * window.innerHeight;
+for(let i=0;i<30;i++){
 
-    document.getElementById("no").style.left = x + "px";
-    document.getElementById("no").style.top = y + "px";
+let heart=document.createElement("div");
+
+heart.className="heart";
+heart.innerHTML="❤️";
+
+heart.style.left=Math.random()*100+"%";
+
+document.body.appendChild(heart);
+
+setTimeout(()=>{heart.remove()},3000);
+
+}
+
+alert("Anh biết mà ❤️");
+
 }
 
 </script>
