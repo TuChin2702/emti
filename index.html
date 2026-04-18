@@ -79,8 +79,40 @@ button{
 <script>
 
 function yes(){
-    alert("Anh biết mà 😚 Em đã đồng ý cho anh một cơ hội!");
+    <script>
+
+let texts = [
+"Không",
+"Anh thử lại đi 😝",
+"Thật luôn hả",
+"Bấm lại xem",
+"Em suy nghĩ kỹ chưa",
+"Thôi đồng ý đi mà 😭"
+];
+
+let i = 0;
+let size = 18;
+
+function changeNo(){
+
+i++;
+size += 8;
+
+let noBtn = document.getElementById("noBtn");
+
+if(i < texts.length){
+noBtn.innerText = texts[i];
+}else{
+noBtn.innerText = "Đồng ý đi nha ❤️";
 }
+
+noBtn.style.fontSize = size + "px";
+noBtn.style.padding = (size/2) + "px " + size + "px";
+
+}
+
+</script>
+
 
 function move(){
     var x = Math.random() * window.innerWidth;
