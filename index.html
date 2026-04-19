@@ -23,7 +23,7 @@ overflow:hidden;
 h1{
 color:#ff4d88;
 font-size:30px;
-margin-bottom:30px;
+margin-bottom:25px;
 }
 
 button{
@@ -44,6 +44,7 @@ color:white;
 .no{
 background:#ddd;
 font-size:20px;
+position:relative;
 }
 
 .sticker{
@@ -58,14 +59,8 @@ animation:fall 3s linear infinite;
 }
 
 @keyframes fall{
-0%{
-transform:translateY(-100px);
-opacity:1;
-}
-100%{
-transform:translateY(100vh);
-opacity:0;
-}
+0%{transform:translateY(-100px);opacity:1;}
+100%{transform:translateY(100vh);opacity:0;}
 }
 
 </style>
@@ -78,51 +73,61 @@ opacity:0;
 <h1>Em đồng ý cho anh một cơ hội nhé ❤️</h1>
 
 <button class="yes" onclick="accept()">Đồng ý</button>
-<button class="no" onclick="changeNo()">Không</button>
+<button class="no" id="noBtn" onclick="changeNo()">Không</button>
 
-<audio id="music" loop>
+<!-- NHẠC: CHỈ CHẠY KHI BẤM ĐỒNG Ý -->
+<audio id="music" loop preload="auto">
 <source src="nhac-chuong-mot-doi-buitruonglinh.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 
-let noSize=20;
-
-let noTexts=[
+let noTexts = [
 "Không",
 "Em chắc chưa 🥺",
 "Suy nghĩ lại đi mà 😭",
 "Anh buồn đó 💔",
 "Đừng bấm nữa 😢",
 "Thôi mà đồng ý đi ❤️",
-"Đồng ý đi cho cục kẹo nè 🍭"     
+"Đồng ý đi cho cục kẹo nè 🍭"  
 ];
 
-let index=0;
+let index = 0;
+let noSize = 20;
 
 function changeNo(){
 
-let btn=document.querySelector(".no");
+let btn = document.getElementById("noBtn");
 
-index++;
-if(index>=noTexts.length){
-index=0;
-}
+index = (index + 1) % noTexts.length;
 
-btn.innerText=noTexts[index];
+btn.innerText = noTexts[index];
 
-noSize+=8;
-btn.style.fontSize=noSize+"px";
+noSize += 6;
+btn.style.fontSize = noSize + "px";
 
+// cho nút chạy trốn nhẹ nhẹ
+btn.style.position = "absolute";
+btn.style.left = Math.random() * 70 + "vw";
+btn.style.top = Math.random() * 70 + "vh";
 }
 
 function accept(){
 
-document.getElementById("music").play();
+let music = document.getElementById("music");
 
-document.body.innerHTML="<h1>Anh biết mà 😆❤️</h1><h2>Cảm ơn em đã cho anh cơ hội 💕</h2>";
+// reset & play nhạc khi bấm đồng ý
+music.currentTime = 0;
+music.play().catch(() => {});
 
-for(let i=0;i<40;i++){
+// đổi giao diện
+document.body.innerHTML = `
+<h1>Anh biết mà 😆❤️</h1>
+<h2>Cảm ơn em đã cho anh cơ hội 💕</h2>
+`;
+
+// hiệu ứng tim
+for(let i = 0; i < 60; i++){
 createHeart();
 }
 
@@ -130,23 +135,5 @@ createHeart();
 
 function createHeart(){
 
-let heart=document.createElement("div");
-
-heart.className="heart";
-
-heart.innerHTML="❤️";
-
-heart.style.left=Math.random()*100+"vw";
-
-heart.style.fontSize=(20+Math.random()*30)+"px";
-
-heart.style.animationDuration=(2+Math.random()*3)+"s";
-
-document.body.appendChild(heart);
-
-}
-
-</script>
-
-</body>
-</html>
+let heart = document.createElement("div");
+heart
