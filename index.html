@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anh xin một cơ hội</title>
+    <title>Gửi người anh thương ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -19,47 +19,60 @@
             margin: 0;
             touch-action: manipulation;
         }
-        h1 { color: #ff4d88; font-size: 28px; margin-bottom: 25px; padding: 0 20px; line-height: 1.4; }
-        h2 { color: #ff4d88; font-size: 24px; animation: heartbeat 1.2s infinite; }
+
+        #content {
+            background: rgba(255, 255, 255, 0.4);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            max-width: 80%;
+        }
+
+        h1 { color: #ff4d88; font-size: 26px; line-height: 1.4; margin-bottom: 25px; }
+
+        .sticker { font-size: 70px; margin-bottom: 20px; }
+
         button {
-            padding: 12px 25px;
+            padding: 15px 30px;
             font-size: 18px;
             border: none;
-            border-radius: 25px;
+            border-radius: 50px;
             cursor: pointer;
-            margin: 10px;
-            transition: 0.3s;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        .yes { background: #ff4d88; color: white; position: relative; z-index: 100; }
-        .no { background: #fff; color: #ff4d88; position: relative; z-index: 50; }
-        .sticker { font-size: 60px; margin-bottom: 15px; }
+
+        .yes { background: #ff4d88; color: white; margin-right: 10px; }
+        .yes:active { transform: scale(0.9); }
+
+        .no { background: white; color: #ff4d88; }
+
         .heart {
             position: absolute;
-            font-size: 25px;
+            font-size: 20px;
             animation: fall linear forwards;
             user-select: none;
             pointer-events: none;
+            z-index: 999;
         }
+
         @keyframes fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
     </style>
 </head>
-<body onclick="initMusic()">
+<body onclick="wakeUpMusic()">
 
     <div id="content">
         <div class="sticker">🥺❤️✨</div>
-        <h1>Em đồng ý cho anh một cơ hội nhé ❤️</h1>
-        <button class="yes" onclick="accept()">Đồng ý</button>
-        <button class="no" id="noBtn" onclick="changeNo()">Không</button>
+        <h1 id="mainTitle">Em đồng ý cho anh một cơ hội nhé ❤️</h1>
+        <div class="btn-group">
+            <button class="yes" id="yesBtn" onclick="accept()">Đồng ý</button>
+            <button class="no" id="noBtn" onclick="changeNo()">Không</button>
+        </div>
     </div>
 
     <audio id="music" loop preload="auto">
@@ -68,7 +81,7 @@
 
     <script>
         let noTexts = [
-            "Không", "Em chắc chưa 🥺", "Suy nghĩ lại đi mà 😭", 
+            "Không", "Em chắc chưa? 🥺", "Suy nghĩ lại đi mà... 😭", 
             "Anh buồn đó 💔", "Đừng bấm nữa 😢", "Thôi mà đồng ý đi ❤️", 
             "Cho cục kẹo nè 🍭", "Yêu anh đi màaaa"
         ];
@@ -76,51 +89,45 @@
         let noSize = 18;
         let isMusicReady = false;
 
-        // Hàm "đánh thức" audio khi người dùng chạm vào bất kỳ đâu
-        function initMusic() {
+        function wakeUpMusic() {
+            let music = document.getElementById("music");
             if (!isMusicReady) {
-                let music = document.getElementById("music");
                 music.play().then(() => {
-                    music.pause(); // Mồi thành công thì dừng lại ngay
+                    music.pause();
                     isMusicReady = true;
                 }).catch(() => {});
             }
         }
 
         function changeNo() {
-            initMusic(); // Mồi thêm lần nữa khi bấm nút Không
+            wakeUpMusic();
             let btn = document.getElementById("noBtn");
+            let yesBtn = document.getElementById("yesBtn");
+
             index = (index + 1) % noTexts.length;
             btn.innerText = noTexts[index];
             
-            noSize += 8;
-            btn.style.fontSize = noSize + "px";
+            noSize += 10;
+            yesBtn.style.fontSize = noSize + "px";
+            yesBtn.style.padding = (noSize/2) + "px " + (noSize) + "px";
 
-            let x = Math.random() * (window.innerWidth - btn.offsetWidth);
-            let y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            let x = Math.random() * (window.innerWidth - btn.offsetWidth - 20);
+            let y = Math.random() * (window.innerHeight - btn.offsetHeight - 20);
             
-            // Giới hạn để nút không nhảy ra ngoài màn hình
-            x = Math.max(10, Math.min(x, window.innerWidth - btn.offsetWidth - 10));
-            y = Math.max(10, Math.min(y, window.innerHeight - btn.offsetHeight - 10));
-
             btn.style.position = "fixed";
-            btn.style.left = x + "px";
-            btn.style.top = y + "px";
+            btn.style.left = Math.max(10, x) + "px";
+            btn.style.top = Math.max(10, y) + "px";
         }
 
         function accept() {
             let music = document.getElementById("music");
             music.currentTime = 0;
-            music.play().catch(() => {
-                // Nếu vẫn bị chặn (thường là iPhone), yêu cầu chạm thêm cái nữa
-                console.log("Cần tương tác thêm");
-            });
+            music.play();
 
-            document.body.innerHTML = `
-                <div class="sticker" style="margin-top: 20vh;">🥰💖✨</div>
+            document.getElementById("content").innerHTML = `
+                <div class="sticker">🥰💖✨</div>
                 <h1 style="color: #ff4d88;">Anh biết mà 😆❤️</h1>
-                <h2>Cảm ơn em rất nhiều 💕</h2>
-                <p style="color: #ff85a2; font-weight: bold; margin-top: 20px;">Check inbox anh ngay nhé!</p>
+                <h2 style="color: #ff4d88;">Cảm ơn em thật nhiều!</h2>
             `;
 
             setInterval(createHeart, 200);
