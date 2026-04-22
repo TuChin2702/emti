@@ -17,8 +17,10 @@
             text-align: center;
             overflow: hidden;
             margin: 0;
+            touch-action: manipulation;
         }
-        h1 { color: #ff4d88; font-size: 30px; margin-bottom: 25px; padding: 0 20px; }
+        h1 { color: #ff4d88; font-size: 28px; margin-bottom: 25px; padding: 0 20px; line-height: 1.4; }
+        h2 { color: #ff4d88; font-size: 24px; animation: heartbeat 1.2s infinite; }
         button {
             padding: 12px 25px;
             font-size: 18px;
@@ -27,23 +29,31 @@
             cursor: pointer;
             margin: 10px;
             transition: 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .yes { background: #ff4d88; color: white; position: relative; z-index: 10; }
-        .no { background: #ddd; color: #333; position: relative; z-index: 5; }
-        .sticker { font-size: 60px; margin-bottom: 10px; }
+        .yes { background: #ff4d88; color: white; position: relative; z-index: 100; }
+        .no { background: #fff; color: #ff4d88; position: relative; z-index: 50; }
+        .sticker { font-size: 60px; margin-bottom: 15px; }
         .heart {
             position: absolute;
             font-size: 25px;
             animation: fall linear forwards;
             user-select: none;
+            pointer-events: none;
         }
         @keyframes fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
-<body>
+<body onclick="initMusic()">
 
     <div id="content">
         <div class="sticker">🥺❤️✨</div>
@@ -52,9 +62,9 @@
         <button class="no" id="noBtn" onclick="changeNo()">Không</button>
     </div>
 
-    <audio id="music" loop>
-    <source src="https://files.catbox.moe/9788p5.mp3" type="audio/mpeg">
-</audio>
+    <audio id="music" loop preload="auto">
+        <source src="https://files.catbox.moe/9788p5.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         let noTexts = [
@@ -64,19 +74,35 @@
         ];
         let index = 0;
         let noSize = 18;
+        let isMusicReady = false;
+
+        // Hàm "đánh thức" audio khi người dùng chạm vào bất kỳ đâu
+        function initMusic() {
+            if (!isMusicReady) {
+                let music = document.getElementById("music");
+                music.play().then(() => {
+                    music.pause(); // Mồi thành công thì dừng lại ngay
+                    isMusicReady = true;
+                }).catch(() => {});
+            }
+        }
 
         function changeNo() {
+            initMusic(); // Mồi thêm lần nữa khi bấm nút Không
             let btn = document.getElementById("noBtn");
             index = (index + 1) % noTexts.length;
             btn.innerText = noTexts[index];
             
-            // Tăng size nút Không
             noSize += 8;
             btn.style.fontSize = noSize + "px";
 
-            // Nhảy ngẫu nhiên trong màn hình
             let x = Math.random() * (window.innerWidth - btn.offsetWidth);
             let y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            
+            // Giới hạn để nút không nhảy ra ngoài màn hình
+            x = Math.max(10, Math.min(x, window.innerWidth - btn.offsetWidth - 10));
+            y = Math.max(10, Math.min(y, window.innerHeight - btn.offsetHeight - 10));
+
             btn.style.position = "fixed";
             btn.style.left = x + "px";
             btn.style.top = y + "px";
@@ -84,12 +110,17 @@
 
         function accept() {
             let music = document.getElementById("music");
-            music.play().catch(() => console.log("Trình duyệt chặn nhạc"));
+            music.currentTime = 0;
+            music.play().catch(() => {
+                // Nếu vẫn bị chặn (thường là iPhone), yêu cầu chạm thêm cái nữa
+                console.log("Cần tương tác thêm");
+            });
 
             document.body.innerHTML = `
-                <div class="sticker">🥰💖✨</div>
-                <h1>Anh biết mà 😆❤️</h1>
-                <h2 style="color: #ff4d88;">Cảm ơn em đã cho anh cơ hội 💕</h2>
+                <div class="sticker" style="margin-top: 20vh;">🥰💖✨</div>
+                <h1 style="color: #ff4d88;">Anh biết mà 😆❤️</h1>
+                <h2>Cảm ơn em rất nhiều 💕</h2>
+                <p style="color: #ff85a2; font-weight: bold; margin-top: 20px;">Check inbox anh ngay nhé!</p>
             `;
 
             setInterval(createHeart, 200);
@@ -101,10 +132,8 @@
             heart.innerHTML = "❤️";
             heart.style.left = Math.random() * 100 + "vw";
             heart.style.animationDuration = (Math.random() * 2 + 2) + "s";
-            
             const colors = ["#ff4d88", "#ff85a2", "#ffb3c1", "#ff0000"];
             heart.style.color = colors[Math.floor(Math.random() * colors.length)];
-            
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 3000);
         }
